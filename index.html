@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+
+        <title>Neos Translator Client</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script defer src="index.js"></script>
+    </head>
+
+    <body>
+        <div id="unsupported-popup">
+            <div
+                id="unsupported-window"
+                style="
+                    position: relative;
+                    top: 50%;
+                    left: 50%;
+                    translate: -50% -50%;
+                    width: 60%;
+                    border: 4px red solid;
+                "
+            >
+                <h1 style="background-color: red; margin: 0; padding: 4px">
+                    &#9888; Browser Unsupported
+                </h1>
+                <p>
+                    This browser is not supported as it does not support the
+                    speech recognition web API. Please use a different browser
+                    that supports the speech recognition API to use this tool.
+                </p>
+                <p>Two alternitives that currently work are:</p>
+                <div style="display: flex; justify-content: center; gap: 64px">
+                    <div>
+                        <p style="text-align: center">Edge</p>
+                        <img
+                            src="res/edge.png"
+                            alt="Poorly drawn logo of the Edge web browser."
+                        />
+                    </div>
+                    <div>
+                        <p style="text-align: center">Chrome</p>
+                        <img
+                            src="res/chrome.png"
+                            alt="Poorly drawn logo of the Chrome web browser."
+                        />
+                    </div>
+                </div>
+                <p class="tiny-text">
+                    This is not an endorcement of either web browser. I
+                    personally do not use either, however the speech recognition
+                    API should be supported in both.
+                </p>
+            </div>
+        </div>
+
+        <div id="app">
+            <h1>Neos Translator Client</h1>
+
+            <h2>Settings</h2>
+
+            <form onsubmit="event.preventDefault()">
+                <label for="userid-entry">Neos UserID</label>
+                <input name="userid" id="userid-entry" type="text" />
+
+                <button type="button" id="connect-btn">Connect</button>
+                <span id="connection-status">Not connected.</span>
+
+                <br />
+
+                <label for="langfrom-entry">Translate from</label>
+                <select name="langfrom" id="langfrom-entry"></select>
+
+                <br />
+
+                <label for="langto-entry">Translate to</label>
+                <select name="langto" id="langto-entry"></select>
+            </form>
+
+            <br />
+
+            <button type="button" id="start-translator-btn">
+                Start Translator
+            </button>
+
+            <h2 id="preview-container-header">
+                Speech Recognition Preview
+                <button type="button" id="hide-preview-btn" class="btn-pressed">
+                    Hide
+                </button>
+            </h2>
+            <div id="preview-container"></div>
+        </div>
+    </body>
+</html>
