@@ -35,10 +35,6 @@ if (speechRecognition == undefined) {
     app.style.display = "none";
     unsupportedPopup.style.display = "block";
 
-    alert(
-        "This browser does not support speech recognition and will not work. Please switch to a browser that supports speech recognition."
-    );
-
     throw new Error(
         "Browser does not support SpeechRecognition or webkitSpeechRecognition."
     );
