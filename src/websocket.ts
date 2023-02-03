@@ -7,7 +7,10 @@ namespace ws {
         langFrom: Language,
         langTo: Language
     ) {
-        const url = new URL("ws://localhost:8080/speech");
+        const url = new URL(window.location.href);
+        url.protocol = url.protocol.replace("http", "ws");
+        url.pathname = "ws/speech";
+
         url.searchParams.set("langfrom", languageToTranslationLang[langFrom]);
         url.searchParams.set("langto", languageToTranslationLang[langTo]);
         url.searchParams.set("userid", userID);
