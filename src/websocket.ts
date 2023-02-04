@@ -36,6 +36,31 @@ namespace ws {
             connection?.close();
             connection = undefined;
         });
+        connection.addEventListener("message", (e) => {
+            // Try to parse the JSON
+            let data;
+            try {
+                data = JSON.parse(e.data) as WSPacket;
+            } catch (e) {
+                connection?.close(4000, "Invalid data packet");
+                throw e;
+            }
+
+            switch (data.type) {
+                case "heartBeat":
+                    // Send a heartbeat back
+                    connection?.send(
+                        JSON.stringify({
+                            type: "heartBeat",
+                        } as WSPacketHeartBeat)
+                    );
+                    break;
+
+                default:
+                    // what
+                    connection?.close(4000, "Invalid data packet");
+            }
+        });
     }
 
     export function isConnected() {

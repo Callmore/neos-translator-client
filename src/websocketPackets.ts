@@ -1,7 +1,3 @@
-interface WSPacket {
-    type: string;
-}
-
 interface WSPacketPartialRecognition {
     type: "partialRecognition";
     text: string;
@@ -17,3 +13,13 @@ interface WSPacketChangeLanguage {
     langFrom: string;
     langTo: string;
 }
+
+interface WSPacketHeartBeat {
+    type: "heartBeat";
+}
+
+type WSPacket =
+    | WSPacketPartialRecognition
+    | WSPacketFinalRecognition
+    | WSPacketChangeLanguage
+    | WSPacketHeartBeat;
