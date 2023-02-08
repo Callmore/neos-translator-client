@@ -18,8 +18,14 @@ interface WSPacketHeartBeat {
     type: "heartBeat";
 }
 
+interface WSPacketInfo {
+    type: "info";
+    msg: string;
+}
+
 type WSPacket =
     | WSPacketPartialRecognition
     | WSPacketFinalRecognition
     | WSPacketChangeLanguage
-    | WSPacketHeartBeat;
+    | WSPacketHeartBeat
+    | WSPacketInfo;

@@ -56,6 +56,11 @@ namespace ws {
                     );
                     break;
 
+                // TODO: Make this show up in the window somewhere
+                case "info":
+                    // Info message!
+                    console.log("INFO: ", data.msg);
+
                 default:
                     // what
                     connection?.close(4000, "Invalid data packet");
