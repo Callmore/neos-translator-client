@@ -5,24 +5,14 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
 
-        <title>Neos Translator Client</title>
+        <title>Neos Translator</title>
         <link rel="stylesheet" href="styles.css" />
         <script defer src="index.js"></script>
     </head>
 
     <body>
         <div id="unsupported-popup">
-            <div
-                id="unsupported-window"
-                style="
-                    position: relative;
-                    top: 50%;
-                    left: 50%;
-                    translate: -50% -50%;
-                    width: 60%;
-                    border: 4px red solid;
-                "
-            >
+            <div id="unsupported-window">
                 <h1 style="background-color: red; margin: 0; padding: 4px">
                     &#9888; Browser Unsupported
                 </h1>
@@ -32,16 +22,16 @@
                     that supports the speech recognition API to use this tool.
                 </p>
                 <p>Two alternitives that currently work are:</p>
-                <div style="display: flex; justify-content: center; gap: 64px">
+                <div id="unsupported-popup-suguestions">
                     <div>
-                        <p style="text-align: center">Edge</p>
+                        <p>Edge</p>
                         <img
                             src="res/edge.png"
                             alt="Poorly drawn logo of the Edge web browser."
                         />
                     </div>
                     <div>
-                        <p style="text-align: center">Chrome</p>
+                        <p>Chrome</p>
                         <img
                             src="res/chrome.png"
                             alt="Poorly drawn logo of the Chrome web browser."
@@ -62,6 +52,16 @@
             <h2>Settings</h2>
 
             <form onsubmit="event.preventDefault()">
+                <label for="translateurl-entry">Translate API URL</label>
+                <input
+                    name="translateurl"
+                    id="translateurl-entry"
+                    type="text"
+                />
+                Click <a href="translator/howto">here</a> to see how to set up.
+
+                <br />
+
                 <label for="userid-entry">Neos UserID</label>
                 <input name="userid" id="userid-entry" type="text" />
 
@@ -92,8 +92,6 @@
                 </button>
             </h2>
             <div id="preview-container"></div>
-
-            <p>This translator will be unsuported. Expect it to stop working soon.</p>
         </div>
     </body>
 </html>

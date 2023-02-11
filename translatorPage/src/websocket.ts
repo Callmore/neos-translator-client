@@ -1,6 +1,9 @@
 namespace ws {
     let connection: WebSocket | undefined = undefined;
 
+    let connectionLangFrom: Language | undefined = undefined;
+    let connectionLangTo: Language | undefined = undefined;
+
     // TODO: Sanitise languages to make sure the correct language format is sent
     export function connect(
         userID: string,
@@ -14,6 +17,9 @@ namespace ws {
         url.searchParams.set("langfrom", languageToTranslationLang[langFrom]);
         url.searchParams.set("langto", languageToTranslationLang[langTo]);
         url.searchParams.set("userid", userID);
+
+        connectionLangFrom = langFrom;
+        connectionLangTo = langTo;
 
         initialise(url);
     }
@@ -35,6 +41,8 @@ namespace ws {
 
             connection?.close();
             connection = undefined;
+            connectionLangFrom = undefined;
+            connectionLangTo = undefined;
         });
         connection.addEventListener("message", (e) => {
             // Try to parse the JSON
@@ -89,17 +97,30 @@ namespace ws {
         );
     }
 
-    export function sendFinal(text: string) {
+    export async function sendFinal(text: string) {
         if (connection == undefined) {
             return;
         }
 
+        if (connectionLangFrom == undefined || connectionLangTo == undefined) {
+            return;
+        }
+
+        const translatedText = await translateText(
+            text,
+            connectionLangFrom,
+            connectionLangTo
+        );
+
         connection.send(
             JSON.stringify({
                 type: "finalRecognition",
-                text: text,
+                origanal: text,
+                translated: translatedText,
             } as WSPacketFinalRecognition)
         );
+
+        return translatedText;
     }
 
     // TODO: Sanitise languages to make sure the correct language format is sent
@@ -115,5 +136,8 @@ namespace ws {
                 langTo: langTo,
             } as WSPacketChangeLanguage)
         );
+
+        connectionLangFrom = langFrom;
+        connectionLangTo = langTo;
     }
 }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="robots" content="noindex" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="/styles.css" rel="stylesheet" />
+        <title>Neos Translator: HowTo</title>
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>How to set up the translator</h1>
+            <p>
+                The method that this translator uses is the same as
+                <a>the translator being described in this document.</a> If you
+                know how to set that translator up, you will be able to set this
+                one up very quickly.
+            </p>
+
+            <p>
+                The following steps are required to be able to use this
+                translator. The method shown here requires a google account, but
+                with some understanding of how it works, a custom system could
+                work as well.
+            </p>
+
+            <h2>Create the Google App</h2>
+            <p>
+                The first step is to create the Google app responsible for
+                converting the speech into other languages.
+            </p>
+
+            <p>
+                Head to
+                <a href="https://script.google.com">script.google.com</a> to
+                access your scripts. This will require that you have a Google
+                account to access.
+            </p>
+
+            <p>Create a new project by clicking on the New Project button.</p>
+            <img
+                src="res/new-project.png"
+                alt="The new project button at scripts.google.com."
+            />
+
+            <p>
+                You will now be greeted by a screen that should look simular to
+                this:
+            </p>
+            <img
+                src="res/blank-project.png"
+                alt="A blank Apps Script project."
+            />
+
+            <p>
+                Enter the following code into the blank editor that has now
+                appeared.
+            </p>
+            <pre><code class="lang-javascript">function doGet(e) {
+  const p = e.parameter;
+  const translatedText = LanguageApp.translate(p.text, p.source, p.target);
+  return ContentService.createTextOutput(translatedText);
+}
+</code></pre>
+
+            <div class="block-info">
+                <span class="block-title">Explanation for the code above</span>
+                <p>The defined function <code>doGet</code> is special as when the app is turned into a webapp, the <code>doGet</code> function is called for the get request.</p>
+                <p><code>e.parameter</code> is a mapping of all the query parameters in the URL.</p>
+                <p><code>LanguageApp</code> is the way to translate text using Google translate. The <code>translate</code> function takes in 3 arguments, the text to translate and the laguages to translate from and to, and returns the translated text.</p>
+                <p><code>ContentService.createTextOutput</code> converts the translated text into a valid response that can be sent back to the client asking for the translation.</p>
+            </div>
+
+            <p>After the code has been inserted, click the blue deploy button in the top right of the window, and click "New Deployment".</p>
+            <img src="res/deploy-project.png" alt="A dropdown allowing the user to pick from a selection of options relating to deploying their project." />
+
+            <p>Click on the cog in the top left of the popup, and then click "Web App". This will give you a URL that you can call to return the translated text when provided with the right arguments.</p>
+            <img src="res/deploy-type.png" alt="A dropdown allowing the user to pick from a selection of deploy options." />
+
+            <p>A configuration window will now show, make sure set <code>Execute as</code> to "Me", and <code>Who has access</code> to "Anyone"</p>
+            <img src="res/deploy-config.png" alt="The deploy configuration menu."/>
+            <p class="tiny-text">My email has been blanked out of this image.</p>
+
+            <p>Click on the blue <code>Deploy</code> button and wait for the app to deploy.</p>
+
+            <p>After a few seconds the app will have been deployed and you will be given a URL. Copy this URL down to the clipboard and continue onwards.</p>
+
+            <div class="block-info">
+                <span class="block-title">Do not worry about losing this.</span>
+                <p>The URL can be reobtained after being lost by clicking on the deploy button again and then clicking manage deployments. This will show you the URL again and allow you to copy it.</p>
+            </div>
+
+            <p>Take this URL and paste it into the text input box on the translator that is labeled <code>Translate API URL</code>.</p>
+            <p>Now just enable the translator in-game and on the website, make sure that you are connected and talk away! Your words should be appearing behind you as you speak, both in the language are translating from and to.</p>
+
+            <p>Do not worry about having to copy this URL again in the future, the webbrowser should save the last URL entered into the box.</p>
+
+            <hr/>
+
+            <h2>Technical details</h2>
+            <p>Technicly all that is needed is a API that accepts the query parameters <code>text</code> (The text to translate), <code>source</code> (The language identifier for the language the text passed in is in) and <code>target</code> (The language the resulting text should be in.) and return a text document containing nothing other than the result of the translation. With this information it should be posible (if wanted) to write a custom API for use with the translator if you would like to avoid Google.</p>
+
+            <link
+                rel="stylesheet"
+                href="https://unpkg.com/@highlightjs/cdn-assets@11.7.0/styles/default.min.css"
+            />
+            <script src="https://unpkg.com/@highlightjs/cdn-assets@11.7.0/highlight.min.js"></script>
+            <script>
+                hljs.highlightAll();
+            </script>
+        </div>
+    </body>
+</html>

@@ -46,8 +46,11 @@ button.btn-pressed {
 }
 
 .preview-final {
-    animation: forwards 10s ease-in fade-out;
     margin: 0;
+}
+
+.preview-fade-out {
+    animation: forwards 10s ease-in fade-out;
 }
 
 @keyframes fade-out {
@@ -73,6 +76,25 @@ button.btn-pressed {
     font-size: smaller;
 }
 
+#unsupported-window {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    border: 4px red solid;
+}
+
 #unsupported-window p {
     margin: 4px;
+}
+
+#unsupported-popup-suguestions {
+    display: flex;
+    justify-content: center;
+    gap: 64px;
+}
+
+#unsupported-popup-suguestions p {
+    text-align: center
 }

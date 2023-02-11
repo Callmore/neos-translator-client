@@ -14,6 +14,9 @@ const connectionStatusInfo = document.getElementById(
     "connection-status"
 ) as HTMLSpanElement;
 
+const APIURLEntry = document.getElementById(
+    "translateurl-entry"
+) as HTMLInputElement;
 const userIDEntry = document.getElementById("userid-entry") as HTMLInputElement;
 const langFromEntry = document.getElementById(
     "langfrom-entry"
@@ -38,6 +41,18 @@ if (speechRecognition == undefined) {
     throw new Error(
         "Browser does not support SpeechRecognition or webkitSpeechRecognition."
     );
+}
+
+APIURLEntry.addEventListener("change", (e) => {
+    e.preventDefault();
+
+    if (window.localStorage != undefined) {
+        window.localStorage.setItem("APIURL", APIURLEntry.value);
+    }
+});
+
+if (window.localStorage?.getItem("APIURL") != undefined) {
+    APIURLEntry.value = window.localStorage.getItem("APIURL")!;
 }
 
 // Prefill the userid with the userid query parameter
@@ -65,10 +80,12 @@ recognition.addEventListener("result", (e) => {
     const { transcript } = Array.from(latestResult).sort(
         (a, b) => a.confidence - b.confidence
     )[0];
+    let finalTranslatedText: Promise<string | undefined> | undefined =
+        undefined;
 
     // Send the translation off thought the websocket
     if (isFinal) {
-        ws.sendFinal(transcript);
+        finalTranslatedText = ws.sendFinal(transcript);
     } else {
         ws.sendPartial(transcript);
     }
@@ -95,12 +112,26 @@ recognition.addEventListener("result", (e) => {
 
     activePreviewElement.classList.remove("preview-not-final");
     activePreviewElement.classList.add("preview-final");
-    activePreviewElement.innerText = transcript;
+    activePreviewElement.innerText = `${transcript} \u2192 ...`;
 
     const preivewElement = activePreviewElement;
-    setTimeout(() => {
-        preivewElement.remove();
-    }, 10000);
+    finalTranslatedText
+        ?.then(
+            (value) => {
+                if (value == undefined) {
+                    preivewElement.innerText = transcript;
+                    return;
+                }
+                preivewElement.innerText = `${transcript} \u2192 ${value}`;
+            },
+            () => {}
+        )
+        .then(() => {
+            preivewElement.classList.add("preview-fade-out");
+            setTimeout(() => {
+                preivewElement.remove();
+            }, 10000);
+        });
 
     activePreviewElement = undefined;
 });
