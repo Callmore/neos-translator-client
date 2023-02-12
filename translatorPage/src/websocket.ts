@@ -67,6 +67,7 @@ namespace ws {
                 case "info":
                     // Info message!
                     infoLog(data.msg);
+                    break;
 
                 default:
                     // what
