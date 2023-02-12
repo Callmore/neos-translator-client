@@ -9,12 +9,6 @@ interface WSPacketFinalRecognition {
     translated: string;
 }
 
-interface WSPacketChangeLanguage {
-    type: "changeLanguage";
-    langFrom: string;
-    langTo: string;
-}
-
 interface WSPacketHeartBeat {
     type: "heartBeat";
 }
@@ -27,6 +21,5 @@ interface WSPacketInfo {
 type WSPacket =
     | WSPacketPartialRecognition
     | WSPacketFinalRecognition
-    | WSPacketChangeLanguage
     | WSPacketHeartBeat
     | WSPacketInfo;

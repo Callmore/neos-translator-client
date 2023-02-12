@@ -1,25 +1,12 @@
 namespace ws {
     let connection: WebSocket | undefined = undefined;
 
-    let connectionLangFrom: Language | undefined = undefined;
-    let connectionLangTo: Language | undefined = undefined;
-
-    // TODO: Sanitise languages to make sure the correct language format is sent
-    export function connect(
-        userID: string,
-        langFrom: Language,
-        langTo: Language
-    ) {
+    export function connect(userID: string) {
         const url = new URL(window.location.href);
         url.protocol = url.protocol.replace("http", "ws");
         url.pathname = "ws/speech";
 
-        url.searchParams.set("langfrom", languageToTranslationLang[langFrom]);
-        url.searchParams.set("langto", languageToTranslationLang[langTo]);
         url.searchParams.set("userid", userID);
-
-        connectionLangFrom = langFrom;
-        connectionLangTo = langTo;
 
         initialise(url);
     }
@@ -28,12 +15,26 @@ namespace ws {
         connection = new WebSocket(url);
         connection.addEventListener("open", () => {
             connectionStatusInfo.innerText = "Connected.";
+
+            connectButton.innerText = "Disconnect";
+            connectButton.disabled = false;
+            connectButton.classList.add("btn-pressed");
         });
         connection.addEventListener("close", (e) => {
-            connectionStatusInfo.innerText = `Disconnected. (Code: ${e.code}, Message: ${e.reason})`;
+            switch (e.code) {
+                case 1005:
+                    connectionStatusInfo.innerText = `Not connected.`;
+                    break;
+
+                default:
+                    connectionStatusInfo.innerText = `Disconnected. (Code: ${e.code}, Message: ${e.reason})`;
+            }
 
             connection?.close();
             connection = undefined;
+
+            connectButton.innerText = "Connect";
+            connectButton.classList.remove("btn-pressed");
         });
         connection.addEventListener("error", (e) => {
             connectionStatusInfo.innerText = `Websocket error, see console for more details.`;
@@ -41,8 +42,6 @@ namespace ws {
 
             connection?.close();
             connection = undefined;
-            connectionLangFrom = undefined;
-            connectionLangTo = undefined;
         });
         connection.addEventListener("message", (e) => {
             // Try to parse the JSON
@@ -67,7 +66,7 @@ namespace ws {
                 // TODO: Make this show up in the window somewhere
                 case "info":
                     // Info message!
-                    console.log("INFO: ", data.msg);
+                    infoLog(data.msg);
 
                 default:
                     // what
@@ -85,11 +84,11 @@ namespace ws {
     }
 
     export function sendPartial(text: string) {
-        if (connection == undefined) {
+        if (!isConnected()) {
             return;
         }
 
-        connection.send(
+        connection?.send(
             JSON.stringify({
                 type: "partialRecognition",
                 text: text,
@@ -98,21 +97,17 @@ namespace ws {
     }
 
     export async function sendFinal(text: string) {
-        if (connection == undefined) {
-            return;
-        }
-
-        if (connectionLangFrom == undefined || connectionLangTo == undefined) {
+        if (!isConnected()) {
             return;
         }
 
         const translatedText = await translateText(
             text,
-            connectionLangFrom,
-            connectionLangTo
+            langFromEntry.value as Language,
+            langToEntry.value as Language
         );
 
-        connection.send(
+        connection?.send(
             JSON.stringify({
                 type: "finalRecognition",
                 origanal: text,
@@ -123,21 +118,11 @@ namespace ws {
         return translatedText;
     }
 
-    // TODO: Sanitise languages to make sure the correct language format is sent
-    export function changeLang(langFrom: Language, langTo: Language) {
-        if (connection == undefined) {
+    export function disconnect() {
+        if (!isConnected()) {
             return;
         }
 
-        connection.send(
-            JSON.stringify({
-                type: "changeLanguage",
-                langFrom: langFrom,
-                langTo: langTo,
-            } as WSPacketChangeLanguage)
-        );
-
-        connectionLangFrom = langFrom;
-        connectionLangTo = langTo;
+        connection?.close();
     }
 }

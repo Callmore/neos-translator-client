@@ -38,15 +38,31 @@ button.btn-pressed {
     border: 2px lightgoldenrodyellow solid;
 }
 
+#info-container-header {
+    background-color: lightcyan;
+    padding: 2px;
+    margin-bottom: 0;
+}
+
+#info-container {
+    border: 2px lightcyan solid;
+    max-height: 16em;
+    overflow-y: scroll;
+}
+
+#info-container > p {
+    margin: 0 4px;
+}
+
 .preview-not-final {
     font-style: italic;
     color: silver;
     font-size: larger;
-    margin-bottom: 0;
+    margin: 0 4px;
 }
 
 .preview-final {
-    margin: 0;
+    margin: 0 4px;
 }
 
 .preview-fade-out {
@@ -96,5 +112,5 @@ button.btn-pressed {
 }
 
 #unsupported-popup-suguestions p {
-    text-align: center
+    text-align: center;
 }

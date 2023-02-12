@@ -13,6 +13,9 @@ const connectButton = document.getElementById(
 const connectionStatusInfo = document.getElementById(
     "connection-status"
 ) as HTMLSpanElement;
+const infoContainer = document.getElementById(
+    "info-container"
+) as HTMLDivElement;
 
 const APIURLEntry = document.getElementById(
     "translateurl-entry"
@@ -203,11 +206,25 @@ function unhidePreview() {
 }
 
 connectButton.addEventListener("click", () => {
-    ws.connect(
-        userIDEntry.value,
-        langFromEntry.value as Language,
-        langToEntry.value as Language
-    );
+    if (ws.isConnected()) {
+        ws.disconnect();
+        return;
+    }
+
+    connectButton.disabled = true;
+    connectButton.innerText = "Connecting...";
+
+    ws.connect(userIDEntry.value);
 });
+
+function infoLog(msg: string) {
+    const now = new Date();
+
+    const elm = document.createElement("p");
+    elm.innerHTML = `${now.toLocaleTimeString()} - ${msg}`;
+
+    infoContainer.appendChild(elm);
+    infoContainer.scrollTop = infoContainer.scrollHeight;
+}
 
 console.log("Webpage loaded!");
