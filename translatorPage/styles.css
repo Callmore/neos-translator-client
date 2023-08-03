@@ -108,7 +108,13 @@ button.btn-pressed {
 #unsupported-popup-suguestions {
     display: flex;
     justify-content: center;
+    flex-wrap: wrapM;
     gap: 64px;
+    margin: 0 32px;
+}
+
+#unsupported-popup-suguestions img {
+    max-width: 100%;
 }
 
 #unsupported-popup-suguestions p {
