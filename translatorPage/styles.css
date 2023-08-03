@@ -108,7 +108,7 @@ button.btn-pressed {
 #unsupported-popup-suguestions {
     display: flex;
     justify-content: center;
-    flex-wrap: wrapM;
+    flex-wrap: wrap;
     gap: 64px;
     margin: 0 32px;
 }
